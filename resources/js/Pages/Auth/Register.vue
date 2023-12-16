@@ -1,103 +1,136 @@
-<script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
-const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
-
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-};
-</script>
-
 <template>
-    <GuestLayout>
-        <Head title="Register" />
+  <v-container>
+		<v-row justify="center">
+			<v-col cols="12" lg="6" xl="4">
+				<v-card>
+					<v-card-title>
+						Регистрация
+					</v-card-title>
+					
+					<v-card-text>
+						<v-form
+							@submit.prevent="submit"
+							ref="form"
+							validate-on="blur"
+							:readonly="loading"
+						>
+							<v-text-field
+								label="Имя"
+								v-model="formData.name"
+								:rules="[rules.required, rules.range]"
+							/>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+							<v-text-field
+								label="Фамилия"
+								v-model="formData.surname"
+								:rules="[rules.required, rules.range]"
+							/>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+							<v-text-field
+								label="Отчество"
+								v-model="formData.patronymic"
+								:rules="[rules.range]"
+							/>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+							<v-text-field
+								label="Логин"
+								v-model="formData.login"
+								:rules="[rules.required, rules.range]"
+							/>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+							<v-text-field
+								label="Почта"
+								type="email"
+								v-model="formData.email"
+								:rules="[rules.required, rules.range, rules.email]"
+							/>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+							<v-text-field
+								type="password"
+								label="Пароль"
+								v-model="formData.password"
+								:rules="[rules.required, rules.range, rules.password]"
+							/>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+							<v-text-field
+								type="password"
+								label="Повторите пароль"
+								v-model="repeat"
+								:rules="[rules.required, rules.range, rules.repeat]"
+							/>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+							<v-checkbox
+								:label="'&nbsp; Я согласен с правилами регистрации'"
+								:rules="[rules.accept]"
+								density="dense"
+								class="mb-2"
+							/>
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+							<div class="d-flex">
+								<v-btn
+									variant="flat"
+									type="submit"
+									color="black"
+									class="me-auto"
+									text="Зарегистрироваться"
+									:loading="loading"
+								/>
+								
+								<v-btn
+									@click="$inertia.get('login')"
+									variant="text"
+									text="Уже есть аккаунт?"
+								/>
+							</div>
+						</v-form>
+					</v-card-text>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
+
+<script setup>
+import { ref, defineOptions } from 'vue'
+import { useForm } from '@inertiajs/vue3'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({ layout: AppLayout })
+
+const rules = {
+	required: v => !!v || 'Заполните это поле',
+	range: v => v?.length < 50 || 'Слишком длинное значение',
+	accept: v => v || 'Вы должны согласиться с правилами регистрации',
+	password: v => v?.length >= 6 || 'Не менее 6 символов',
+	repeat: v => v == formData.password || 'Пароли не совпадают',
+	email: v => /^[^@.]+@[^@.]+\.[^@.]+$/.test(v) || 'Введите почту правильно',
+}
+
+const loading = ref()
+const form = ref()
+const repeat = ref()
+const formData = useForm({
+	name: '',
+	surname: '',
+	patronymic: '',
+	login: '',
+	email: '',
+	password: '',
+})
+
+function submit() {
+	form.value.validate().then(() => {
+		if (form.value.isValid) {
+			formData.post(route('register')), {
+				onStart: () => loading.value = true,
+				onFinish: () => loading.value = false,
+				onError: () => {
+					form.value.items.password.reset()
+					form.value.items.repeat.reset()
+				},
+				onSuccess: () => form.value.reset(),
+			}
+		}
+	})
+}
+</script>
