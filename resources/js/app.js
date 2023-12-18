@@ -13,6 +13,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import VueTheMask from 'vue-the-mask'
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -39,6 +41,7 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue, Ziggy)
       .use(vuetify)
+      .use(VueTheMask)
       .mount(el);
   },
   progress: {

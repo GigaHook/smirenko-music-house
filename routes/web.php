@@ -23,7 +23,8 @@ use Inertia\Inertia;
 //});
 
 
-Route::inertia('/', 'Products/Index')->name('products');
+Route::get('/', fn() => redirect(route('products.index')))->name('products');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::inertia('/about', 'About')->name('about');
 
 Route::middleware('guest')->group(function() {
@@ -40,7 +41,7 @@ Route::middleware('auth')->group(function() {
 });
 
 Route::middleware('admin')->group(function() {
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->except(['index']);
 });
 
 

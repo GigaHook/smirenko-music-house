@@ -16,6 +16,6 @@ class AdminGuard
      */
     public function handle(Request $request, Closure $next): Response|RedirectResponse
     {
-        return auth()->user()->is_admin ? $next($request) : redirect()->route('/');
+        return auth()->user()?->is_admin ? $next($request) : redirect()->route('products');
     }
 }

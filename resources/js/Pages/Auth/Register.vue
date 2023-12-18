@@ -124,10 +124,6 @@ function submit() {
 			formData.post(route('register')), {
 				onStart: () => loading.value = true,
 				onFinish: () => loading.value = false,
-				onError: () => {
-					form.value.items.password.reset()
-					form.value.items.repeat.reset()
-				},
 				onSuccess: () => form.value.reset(),
 			}
 		}

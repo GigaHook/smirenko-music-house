@@ -8,7 +8,7 @@
 				
 				<v-btn
 					v-for="item in menuItems"
-					:active="page.url.includes(item.to) || (page.url == '/' && item.to == 'products')"
+					:active="page.url == item.active"
 					:prepend-icon="item.icon"
 					@click="$inertia.get(route(item.to))"
 					stacked
@@ -33,22 +33,31 @@ const menuItems = ref([])
 
 function setMenu() {
 	if (page.props.user) {
-		if (page.props.user.isAdmin) {
+		if (page.props.user?.is_admin == 1) {
 			menuItems.value = [		
 				{
 					text: 'Каталог',
 					icon: 'mdi-shopping',
-					to: 'products',
+					to: 'products.index',
+					active: '/products',
+				},
+				{
+					text: 'Добавить',
+					icon: 'mdi-plus-box',
+					to: 'products.create',
+					active: '/products/create',
 				},
 				{
 					text: 'Заказы',
 					icon: 'mdi-notebook',
-					to: 'orders',
+					to: 'orders.index',
+					active: '/orders',
 				},
 				{
 					text: 'Выйти',
 					icon: 'mdi-logout',
 					to: 'logout',
+					active: '',
 				},
 			]
 		} else {
@@ -56,27 +65,32 @@ function setMenu() {
 				{
 					text: 'Каталог',
 					icon: 'mdi-shopping',
-					to: 'products',
+					to: 'products.index',
+					active: '/products',
 				},
 				{
 					text: 'Корзина',
 					icon: 'mdi-cart',
-					to: 'cart',
+					to: 'cart.index',
+					active: '/cart',
 				},
 				{
 					text: 'Заказы',
 					icon: 'mdi-notebook',
-					to: 'orders',
+					to: 'orders.index',
+					active: '/orders',
 				},
 				{
 					text: 'О нас',
 					icon: 'mdi-information',
 					to: 'about',
+					active: '/about',
 				},
 				{
 					text: 'Выйти',
 					icon: 'mdi-logout',
 					to: 'logout',
+					active: '',
 				},
 			]
 		}
@@ -85,17 +99,20 @@ function setMenu() {
 			{
 				text: 'Каталог',
 				icon: 'mdi-shopping',
-				to: 'products',
+				to: 'products.index',
+				active: '/products',
 			},
 			{
 				text: 'О нас',
 				icon: 'mdi-information',
 				to: 'about',
+				active: '/about',
 			},
 			{
 				text: 'Войти',
 				icon: 'mdi-account',
 				to: 'login',
+				active: '/login',
 			},
 		]
 	}

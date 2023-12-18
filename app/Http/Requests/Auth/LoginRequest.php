@@ -45,7 +45,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => 'Неверный логин или пароль',
+                'login' => 'Неверный логин или пароль',
             ]);
         }
 

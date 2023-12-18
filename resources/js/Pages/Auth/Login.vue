@@ -19,6 +19,7 @@
 								v-model="formData.login"
 								prepend-inner-icon="mdi-account"
 								:rules="[rules.required, rules.range]"
+								:error-messages="formData.errors.login"
 							/>
 
 							<v-text-field
@@ -54,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, defineOptions } from 'vue'
+import { ref, defineOptions, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
@@ -77,9 +78,14 @@ function submit() {
 		if (form.value.isValid) {
 			formData.post(route('login'), {
 				onStart: () => loading.value = true,
-				onFinish: () => loading.value = false,
+				onFinish: () => {
+					loading.value = false
+					console.log(formData.errors)
+				}
 			})
 		}
 	})
 }
+
+//хуйня ебаная
 </script>

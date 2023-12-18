@@ -15,6 +15,13 @@ class ProductController extends Controller
         private ProductService $productService = new ProductService,
     ) {}
 
+    public function index(): Response
+    {
+        return Inertia::render('Products/Index', [
+            'products' => Product::all(),
+        ]);
+    }
+
     public function create(): Response 
     {
         return Inertia::render('Products/Create');
@@ -23,7 +30,7 @@ class ProductController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->productService->createProduct($request->all());
-        return redirect()->route('/');
+        return redirect()->route('products');
     } 
 
     public function show(Product $product): Response 
@@ -44,7 +51,7 @@ class ProductController extends Controller
     {
         $this->productService->updateProduct($request->all(), $product);
         return redirect()->route('/');
-    } 
+    }
 
     public function destroy(Product $product): RedirectResponse 
     {
