@@ -1,6 +1,10 @@
 <template>
-  
-  
+  <Head>
+    <title>
+      {{ product?.name ? 'Изменить товар' : 'Добавить товар' }}
+    </title>
+  </Head>
+
 	<v-container>
 		<v-row justify="center">
 			<v-col lg="6" xl="4">
@@ -13,7 +17,7 @@
             <v-form
               ref="form"
               @submit.prevent="submit"
-              :readonly="loading"
+              :readonly="formData.processing"
               validate-on="blur"
             >
               <v-text-field
@@ -29,6 +33,7 @@
                 append-inner-icon="mdi-image-plus"
                 accept="image/png, image/jpeg, image/jpg"
                 :rules="[rules.image]"
+                validate-on="input"
               />
   
               <v-textarea
@@ -50,8 +55,8 @@
                   variant="flat"
                   type="submit"
                   color="black"
-                  text="Добавить"
-                  :loading="loading"
+                  :text="product?.name ? 'Сохранить' : 'Добавить'"
+                  :loading="formData.processing"
                 />
 
                 <v-btn
@@ -76,38 +81,62 @@ import { ref, defineOptions } from 'vue'
 
 defineOptions({ layout: AppLayout })
 
-const loading = ref()
+const { product } = defineProps({ 
+  product: {
+    type: Object,
+    required: false,
+    default: {},
+  },
+})
+
 const form = ref()
 const image = ref()
 const formData = useForm({
-	name: '',
+	name: product?.name ?? '',
 	image: '',
-	price: '',
-	description: '',
+	price: String(product?.price) ?? '',
+	description: product?.description ?? '',
 })
 
 const rules = {
   required: v => !!v || 'Заполните это поле',
-  range: v => v?.length <= 50 || 'Слишком длинное значение',
+  range:    v => v?.length <= 50 || 'Слишком длинное значение',
   textarea: v => v?.length <= 750 || 'Слишком длинное значение',
-  image: v => v[0] || 'Заполните это поле',
+  image:    v => !!product.name || v[0] || 'Заполните это поле',
 }
 
 function submit() {
 	form.value.validate().then(() => {
 		if (form.value.isValid) {
-			formData.image = image.value[0]
-			formData.post(route('products.store'), {
-				onStart: () => loading.value = true,
-				onFinish: () => loading.value = false,
-				onSuccess: () => router.get(route('products'))
-			})
+      if (image.value?.[0]) {
+        formData.image = image.value[0]
+      }
+
+      if (!product.name) {
+        formData.post(route('products.store'), {
+          onSuccess: () => router.get(route('products'))
+        })
+      } else {
+        router.post(route('products.update', product.id), {
+          _method: 'patch',
+          name: formData.name,
+          image: formData.image,
+          description: formData.description,
+          price: formData.price,
+        }, {
+          forceFormData: true,
+          onSuccess: () => router.get(route('products'))
+        })
+        //formData.patch(route('products.update', product.id), {
+        //  forceFormData: true,
+        //  onSuccess: () => router.get(route('products'))
+        //})
+      }
 		}
 	})
 }
 
 function cancel() {
-  form.value.reset()
   router.get(route('products'))
 }
 </script>

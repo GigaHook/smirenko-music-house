@@ -1,4 +1,8 @@
 <template>
+	<Head>
+		<title>Регистрация</title>
+	</Head>
+
   <v-container>
 		<v-row justify="center">
 			<v-col cols="12" lg="6" xl="4">
@@ -12,30 +16,38 @@
 							@submit.prevent="submit"
 							ref="form"
 							validate-on="blur"
-							:readonly="loading"
+							:readonly="formData.processing"
 						>
 							<v-text-field
 								label="Имя"
 								v-model="formData.name"
 								:rules="[rules.required, rules.range]"
+								:error-messages="formData.errors.name"
+								@update:model-value="formData.clearErrors('name')"
 							/>
 
 							<v-text-field
 								label="Фамилия"
 								v-model="formData.surname"
 								:rules="[rules.required, rules.range]"
+								:error-messages="formData.errors.surname"
+								@update:model-value="formData.clearErrors('surname')"
 							/>
 
 							<v-text-field
 								label="Отчество"
 								v-model="formData.patronymic"
 								:rules="[rules.range]"
+								:error-messages="formData.errors.patronymic"
+								@update:model-value="formData.clearErrors('patronymic')"
 							/>
 
 							<v-text-field
 								label="Логин"
 								v-model="formData.login"
 								:rules="[rules.required, rules.range]"
+								:error-messages="formData.errors.login"
+								@update:model-value="formData.clearErrors('login')"
 							/>
 
 							<v-text-field
@@ -43,6 +55,8 @@
 								type="email"
 								v-model="formData.email"
 								:rules="[rules.required, rules.range, rules.email]"
+								:error-messages="formData.errors.email"
+								@update:model-value="formData.clearErrors('email')"
 							/>
 
 							<v-text-field
@@ -50,6 +64,8 @@
 								label="Пароль"
 								v-model="formData.password"
 								:rules="[rules.required, rules.range, rules.password]"
+								:error-messages="formData.errors.password"
+								@update:model-value="formData.clearErrors('password')"
 							/>
 
 							<v-text-field
@@ -73,7 +89,7 @@
 									color="black"
 									class="me-auto"
 									text="Зарегистрироваться"
-									:loading="loading"
+									:loading="formData.processing"
 								/>
 								
 								<v-btn
@@ -92,7 +108,7 @@
 
 <script setup>
 import { ref, defineOptions } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, Head } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
 defineOptions({ layout: AppLayout })
@@ -106,7 +122,6 @@ const rules = {
 	email: v => /^[^@.]+@[^@.]+\.[^@.]+$/.test(v) || 'Введите почту правильно',
 }
 
-const loading = ref()
 const form = ref()
 const repeat = ref()
 const formData = useForm({
@@ -122,8 +137,6 @@ function submit() {
 	form.value.validate().then(() => {
 		if (form.value.isValid) {
 			formData.post(route('register')), {
-				onStart: () => loading.value = true,
-				onFinish: () => loading.value = false,
 				onSuccess: () => form.value.reset(),
 			}
 		}

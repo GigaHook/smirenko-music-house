@@ -1,4 +1,8 @@
 <template>
+	<Head>
+		<title>О нас</title>
+	</Head>
+
 	<v-container>
 		<v-row justify="center">
 			<v-col cols="8">
@@ -36,6 +40,7 @@
 
 <script setup>
 import { defineOptions } from 'vue'
+import { Head } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
 defineOptions({ layout: AppLayout })

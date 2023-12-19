@@ -1,4 +1,8 @@
 <template>
+  <Head>
+    <title>Каталог</title>
+  </Head>
+
   <v-container>
     <v-row>
       <v-col cols="12">
@@ -17,6 +21,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ProductCard from '@/Components/ProductCard.vue'
 import { defineOptions } from 'vue'
+import { Head } from '@inertiajs/vue3'
 
 defineOptions({ layout: AppLayout })
 defineProps({ products: Array })

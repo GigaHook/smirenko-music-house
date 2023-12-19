@@ -1,4 +1,8 @@
 <template>
+	<Head>
+		<title>Вход в аккаунт</title>
+	</Head>
+
   <v-container>
 		<v-row justify="center">
 			<v-col cols="12" lg="6" xl="4">
@@ -12,7 +16,7 @@
 							@submit.prevent="submit"
 							ref="form"
 							validate-on="blur"
-							:readonly="loading"
+							:readonly="formData.processing"
 						>
 							<v-text-field
 								label="Логин"
@@ -20,6 +24,7 @@
 								prepend-inner-icon="mdi-account"
 								:rules="[rules.required, rules.range]"
 								:error-messages="formData.errors.login"
+								@update:model-value="formData.clearErrors('login')"
 							/>
 
 							<v-text-field
@@ -28,6 +33,7 @@
 								v-model="formData.password"
 								prepend-inner-icon="mdi-key"
 								:rules="[rules.required, rules.range]"
+								@update:model-value="formData.clearErrors('password')"
 							/>
 
 							<div class="d-flex">
@@ -37,7 +43,7 @@
 									color="black"
 									class="me-auto"
 									text="Войти"
-									:loading="loading"
+									:loading="formData.processing"
 								/>
 								
 								<v-btn
@@ -56,7 +62,7 @@
 
 <script setup>
 import { ref, defineOptions, watch } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, Head } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
 defineOptions({ layout: AppLayout })
@@ -66,7 +72,6 @@ const rules = {
 	range: v => v?.length < 50 || 'Слишком длинное значение',
 }
 
-const loading = ref()
 const form = ref()
 const formData = useForm({
 	login: '',
@@ -76,16 +81,8 @@ const formData = useForm({
 function submit() {
 	form.value.validate().then(() => {
 		if (form.value.isValid) {
-			formData.post(route('login'), {
-				onStart: () => loading.value = true,
-				onFinish: () => {
-					loading.value = false
-					console.log(formData.errors)
-				}
-			})
+			formData.post(route('login'))
 		}
 	})
 }
-
-//хуйня ебаная
 </script>

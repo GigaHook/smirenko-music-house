@@ -15,7 +15,14 @@ class ProductService {
 
     public function updateProduct(array $data, Product $product): void
     {
-        //
+        if ($data['image']) {
+            $data['image'] = $this->uploadImage($data['image']);
+        } else {
+            unset($data['image']);
+        }
+
+        $product->update($data);
+        //сделать удаление картинок
     }
 
     private function uploadImage(mixed $image): string

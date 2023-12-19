@@ -49,13 +49,13 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product): RedirectResponse 
     {
-        $this->productService->updateProduct($request->all(), $product);
-        return redirect()->route('/');
+        $this->productService->updateProduct($request->except('_method'), $product);
+        return redirect()->route('products');
     }
 
     public function destroy(Product $product): RedirectResponse 
     {
         $product->delete();
-        return redirect()->route('/');
+        return redirect()->route('products');
     } 
 }
