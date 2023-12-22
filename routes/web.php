@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -36,14 +37,13 @@ Route::middleware('guest')->group(function() {
 
 Route::middleware('auth')->group(function() {
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    //cart
+    Route::resource('cart', CartItemController::class);
+    Route::post('/cart/clear', [CartItemController::class, 'clear'])->name('cart.clear');
+
     //orders
 });
 
-Route::middleware('admin')->group(function() {
-    Route::resource('products', ProductController::class)->except(['index']);
-});
-
+Route::resource('products', ProductController::class);
 
 
 //require __DIR__.'/auth.php';

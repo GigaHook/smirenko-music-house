@@ -38,7 +38,11 @@
 
       <v-card-text>
         {{ product.price }} 
-        <v-icon icon="mdi-currency-rub" size="16" class="ms-n1 pb-1"/>
+        <v-icon
+          icon="mdi-currency-rub"
+          class="ms-n1 pb-1"
+          size="16"
+        />
       </v-card-text>
 
       <slot/>
@@ -48,8 +52,5 @@
 
 <script setup>
 import Modal from '@/Components/Modal.vue'
-
-defineProps({
-  product: Object,
-})
+defineProps({ product: Object })
 </script>

@@ -6,7 +6,8 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ProductService {
+class ProductService 
+{
     public function createProduct(array $data): void
     {
         $data['image'] = $this->uploadImage($data['image']);

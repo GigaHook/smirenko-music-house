@@ -13,7 +13,9 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductService $productService = new ProductService,
-    ) {}
+    ) {
+        $this->middleware('admin')->except(['index', 'show']);
+    }
 
     public function index(): Response
     {
