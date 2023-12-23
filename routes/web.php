@@ -24,8 +24,7 @@ use Inertia\Inertia;
 //});
 
 
-Route::get('/', fn() => redirect(route('products.index')))->name('products');
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/', fn() => redirect(route('products.index')))->name('products'); //same as below
 Route::inertia('/about', 'About')->name('about');
 
 Route::middleware('guest')->group(function() {

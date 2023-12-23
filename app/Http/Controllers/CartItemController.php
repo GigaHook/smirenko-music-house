@@ -26,14 +26,17 @@ class CartItemController extends Controller
         $this->cartService->increase($request->id);
     }
 
-    public function update(string $id): void
+    public function update(int $id): void
     {
         $this->cartService->decrease($id);
     }
 
-    public function destroy(string $id): void
+    public function destroy(int $id): void
     {
-        CartItem::destroy($id);
+        CartItem::where([
+            'product_id' => $id,
+            'user_id' => auth()->id(),
+        ])->delete();
     }
 
     public function clear(): void

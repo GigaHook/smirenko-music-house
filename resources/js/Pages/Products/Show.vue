@@ -32,6 +32,7 @@
         </div>
 
         <v-btn
+          @click="increase"
           color="black"
           text="В корзину"
         />
@@ -41,10 +42,13 @@
 </template>
 
 <script setup>
+import useCartItem from '@/Composables/useCartItem'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head } from '@inertiajs/vue3'
 import { defineOptions } from 'vue'
 
 defineOptions({ layout: AppLayout })
-defineProps({ product: Object })
+
+const { product } =  defineProps({ product: Object })
+const { increase } = useCartItem(product)
 </script>

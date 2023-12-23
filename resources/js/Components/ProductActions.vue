@@ -1,15 +1,21 @@
 <template>
-  <v-card-actions class="d-flex justify-space-between">
+  <v-card-actions>
     <v-btn
       @click="increase"
       variant="flat"
       color="black"
-      text="В корзину"
+      icon="mdi-cart-plus"
+      size="36"
+      rounded
     />
     
     <v-btn
       @click="$inertia.get(route('products.show', product.id))"
-      text="Подробнее"
+      variant="flat"
+      color="black"
+      icon="mdi-dots-horizontal"
+      size="36"
+      rounded
     />  
   </v-card-actions>
 </template>

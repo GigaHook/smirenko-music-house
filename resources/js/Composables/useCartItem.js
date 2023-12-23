@@ -14,14 +14,9 @@ export default function useCartItem(product) {
     router.delete(route('cart.destroy', product.id))
   }
 
-  router.post(route('cart.clear'))
-  function clear() {
-  }
-
   return {
     increase,
     decrease,
     remove,
-    clear,
   }
 }

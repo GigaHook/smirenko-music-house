@@ -6,18 +6,43 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <h1 class="text-h3">Корзина</h1>
+        <v-card>
+          <v-card-text class="d-flex align-center">
+            Всего {{ cart.totalItems }} предметов,
+            на  общую стоимость {{ cart.total }} 
+            <v-icon
+              icon="mdi-currency-rub"
+              size="16"
+              class="me-auto"
+            />
+            
+            <v-btn
+              @click="$inertia.get(route('cart.clear'))"
+              variant="flat"
+              color="black"
+              icon="mdi-cart-remove"
+              size="36"
+              class="me-2"
+              rounded
+              :disabled="cart.items.length < 1"
+            />
+
+            <v-btn
+              @click="$inertia.get(route('orders.create'))"
+              variant="flat"
+              color="black"
+              text="Оформить заказ"
+              :disabled="cart.items.length < 1"
+            />
+          </v-card-text>
+        </v-card>
       </v-col>
 
       <ProductCard
         v-for="product in cart.items"
         :product="product"
       >
-        <v-card-actions class="d-flex justify-space-between">
-          <v-btn
-            
-          />
-        </v-card-actions>
+        <CartActions :product="product"/>
       </ProductCard>
     </v-row>
   </v-container>
@@ -26,6 +51,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ProductCard from '@/Components/ProductCard.vue'
+import CartActions from '@/Components/CartActions.vue'
 import { defineOptions, onMounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
 
